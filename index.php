@@ -211,9 +211,9 @@ class Date
    
    $interval = new Interval($date1, $date2);
    
-   //echo $interval->toDays().'<br>';   // выведет разницу в днях
-   //echo $interval->toMonths().'<br>'; // выведет разницу в месяцах
-   //echo $interval->toYears();  // выведет разницу в годах
+   echo $interval->toDays().'<br>';   // выведет разницу в днях
+   echo $interval->toMonths().'<br>'; // выведет разницу в месяцах
+   echo $interval->toYears().'<br>';  // выведет разницу в годах
    print $interval;
-   //var_dump($interval); // массив вида ['years' => '', 'months' => '', 'days' => '']
-
+   var_dump($interval); // массив вида ['years' => '', 'months' => '', 'days' => '']
+  print 'change';
