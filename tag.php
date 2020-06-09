@@ -179,3 +179,24 @@ interface iTag
 			return $arr;
 		}
 	}
+
+	/**
+	 * 
+	 */
+	class Image extends Tag
+	{
+		
+		function __construct()
+		{
+			parent::__construct('img');
+			$this->setAttr('src','')->setAttr('alt','');
+		}
+
+		public function __toString()
+		{
+			return parent::open();
+		}
+	}
+
+	$img = new Image();
+	print ($img->setAttr('src','008.jpg')->setAttr('with','300px'));
