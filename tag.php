@@ -198,5 +198,36 @@ interface iTag
 		}
 	}
 
-	$img = new Image();
-	print ($img->setAttr('src','008.jpg')->setAttr('with','300px'));
+	
+   class Link extends Tag
+   {
+   	const MARKLINK = 'active';
+   	
+   	function __construct()
+   	{
+   		parent::__construct('a');
+   		$this->setAttr('href','');
+   	}
+
+   	//Переопределяем метод родителя:
+	public function open()
+	{
+		$this->activateSelf(); // вызываем активацию
+		return parent::open(); // вызываем метод родителя
+	}
+		
+	private function activateSelf()
+	{
+		$url = $_SERVER['REQUEST_URI'];         // обрезаем ненужное с URL проверять работу!!!!
+        preg_match_all('#.+/(.+\..+)$#', $url, $matches);
+        $myUrl = ($matches[1][0]);
+
+		if ($this->getAttr('href') == $myUrl) {
+				$this->addClass(Link::MARKLINK);
+		}
+	}
+
+   }
+
+  
+ 
