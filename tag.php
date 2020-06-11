@@ -262,12 +262,89 @@ interface iTag
 		}
 
 	}
+ 
+    class Form extends Tag
+	{
+		public function __construct()
+		{
+			parent::__construct('form');
+		}
+	}
+  
+  
+	
+    class Input extends Tag
+	{
+		public function __construct()
+		{
+			parent::__construct('input');
+		}
+		
+		public function open()
+		{
+			$inputName = $this->getAttr('name');
+			
+			// Если атрибут name задан у инпута:
+			if ($inputName) {
+				if (isset($_REQUEST[$inputName])) {
+					$value = $_REQUEST[$inputName];
+					$this->setAttr('value', $value);
+				}
+			}
+			
+			return parent::open();
+		}
+		
+		public function __toString()
+		{
+			return $this->open();
+		}
+	}
 
-   /* $list = new HtmlList('ul');
+    class Submit extends Input
+	{
+		public function __construct()
+		{
+			$this->setAttr('type', 'submit');
+			parent::__construct();
+		}
+	}
 
-    echo $list->setAttr('class', 'eee')
-		->addItem((new ListItem())->setText('item1')->setAttr('class', 'first'))
-		->addItem((new ListItem())->setText('item2'))
-		->addItem((new ListItem())->setText('item3'))
-		->show();*/
-   
+	class Textarea extends Tag
+	{
+		public function __construct()
+		{
+			parent::__construct('textarea');
+		}
+
+		public function open()
+		{
+		    $textareaName = $this->getAttr('name');
+			
+			// Если атрибут name задан у инпута:
+			if ($textareaName) {
+				if (isset($_REQUEST[$textareaName])) {
+					$value = $_REQUEST[$textareaName];
+					$this->setText($value);
+				}
+			}
+			
+			return parent::open();
+		}
+
+		public function __toString()
+		{
+			return(string)parent::show();
+		}
+	}
+
+	
+/*
+$form = (new Form)->setAttrs(['action'=>'','method','GET']);
+print $form->open();
+  print (new Input)->setAttr('name','login');
+  print (new Input)->setAttr('name','password')->setAttr('type','password');
+  echo (new Textarea)->setAttr('name', 'text')->setText('my mess');
+  print (new Submit);
+print $form->close();
+*/
