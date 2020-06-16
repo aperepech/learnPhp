@@ -310,6 +310,15 @@ interface iTag
 		}
 	}
 
+	class Hidden extends Input
+	{
+		public function __construct()
+		{
+			$this->setAttr('type', 'hidden');
+			parent::__construct();
+		}
+	}
+
 	class Textarea extends Tag
 	{
 		public function __construct()
@@ -338,13 +347,88 @@ interface iTag
 		}
 	}
 
+	class Checkbox extends Tag
+	{
+		public function __construct()
+		{
+			$this->setAttr('type', 'checkbox');
+			$this->setAttr('value', '1');
+			parent::__construct('input');
+		}
+		
+		public function open()
+		{
+			$name = $this->getAttr('name');
+			
+			if ($name) {
+				$hidden = (new Hidden)->setAttr('name', $name)->setAttr('value', '0');
+				
+				if (isset($_REQUEST[$name])) {
+					$value = $_REQUEST[$name];
+					
+					if ($value == 1) {
+						$this->setAttr('checked');
+					} else {
+						$this->removeAttr('checked');
+					}
+				}
+				
+				return $hidden->open() . parent::open();
+			} else {
+				return parent::open();
+			}
+		}
+		
+		public function __toString()
+		{
+			return $this->open();
+		}
+	}
+   
+    
+    class Radio extends tag
+    {
+    	
+    	function __construct()
+    	{
+    		$this->setAttr('type','radio');
+    		$this->setAttr('value', '1');
+    		parent::__construct('input');
+    	}
+
+    	public function open()
+		{
+			$name = $this->getAttr('name');
+			
+			if ($name) {
+				$hidden = (new Hidden)->setAttr('name', $name)->setAttr('value', '0');
+				
+				if (isset($_REQUEST[$name])) {
+					$value = $_REQUEST[$name];
+					
+					if ($value == 1) {
+						$this->setAttr('checked');
+					} else {
+						$this->removeAttr('checked');
+					}
+				}
+				
+				return $hidden->open() . parent::open();
+			} else {
+				return parent::open();
+			}
+		}
+		
+		public function __toString()
+		{
+			return $this->open();
+		}
+    }
+
+$form = (new Form)->setAttrs(['action' => '', 'method' => 'GET']);
 	
-/*
-$form = (new Form)->setAttrs(['action'=>'','method','GET']);
-print $form->open();
-  print (new Input)->setAttr('name','login');
-  print (new Input)->setAttr('name','password')->setAttr('type','password');
-  echo (new Textarea)->setAttr('name', 'text')->setText('my mess');
-  print (new Submit);
-print $form->close();
-*/
+	echo $form->open();
+		echo (new Radio)->setAttr('name', 'radio');
+		echo (new Input)->setAttr('name', 'user');
+		echo new Submit;
+	echo $form->close();
