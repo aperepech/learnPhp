@@ -425,10 +425,99 @@ interface iTag
 		}
     }
 
-$form = (new Form)->setAttrs(['action' => '', 'method' => 'GET']);
+    
+		
+		
+  class Option extends Tag
+	{   
+		private $select;
+
+		public function __construct()
+		{
+			parent::__construct('option');
+			$this->select = new Select;
+		}
+
+		public function setSelected()
+		{
+          $this->setAttr('selected');
+          return $this;
+		}
+
+		
+	}    
+
+	class Select extends Tag
+	{
+		private $items = [];
+		
+
+		public function __construct()
+		{
+			parent::__construct('select');
+		}
+		
+		public function addItem(Option $option)
+		{
+			$this->items[] = $option;
+			return $this;
+		}
+		
+		public function show()
+		{
+			$result = $this->open();
+			
+			foreach ($this->items as $item) {
+				$result .= $item->show();
+			}
+			
+			$result .= $this->close();
+			
+			return $result;
+		}
+
+		private function selectName()    // получаем выбранный option
+		{
+			$name = $this->getAttr('name');
+			
+			if (!empty($_REQUEST[$name])) {
+				$value = $_REQUEST[$name];
+				return $value;
+			}
+
+		}
+
+		public function open()   // сохраням выбранное значение после отправки формы
+		{
+          $value = $this->selectName();
+
+          foreach ($this->items as $item) {
+          	if ($value == $item->getText()) {
+          		$item->setAttr('selected');
+          	}
+          }
+
+          return parent::open();
+		}
+
+	}
+    
+   
+
+	$form = (new Form)->setAttrs(['action' => '', 'method' => 'GET']);
 	
-	echo $form->open();
-		echo (new Radio)->setAttr('name', 'radio');
-		echo (new Input)->setAttr('name', 'user');
+	    echo $form->open();
+		echo (new Input)->setAttr('name', 'test');
+		$r = new Select;
+		echo ($r)->setAttr('name','list')
+			->addItem((new Option())->setText('1'))
+		    ->addItem((new Option())->setText('2'))
+		    ->addItem((new Option())->setText('3'))
+		    ->show();
+		
 		echo new Submit;
-	echo $form->close();
+	    echo $form->close();
+
+
+
+
